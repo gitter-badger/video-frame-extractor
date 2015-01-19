@@ -15,9 +15,10 @@ function calculateFrame(frameRate, time, frameNumber) {
 }
 
 exports.extractFrame = function(filePath, frameRate, time, frameNumber) {
-  var frame = calculateFrame(frameRate, time, frameNumber);
-  console.log(frame);
-  var command  = 'ffmpeg -r 1 -i ' + filePath +' -vf "select=gte(n\\, ' + frame  +')" -vframes 1 ' + frameNumber + '.png -y';
+  var frame, command;
+  
+  frame = calculateFrame(frameRate, time, frameNumber);
+  command  = 'ffmpeg -r 1 -i ' + filePath +' -vf "select=gte(n\\, ' + frame  +')" -vframes 1 ' + frameNumber + '.png -y';
 
   child = exec(command, function (error, stdout, stderr) {
     if (error !== null) {
