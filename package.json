@@ -1,7 +1,7 @@
 {
   "name": "video-frame-extractor",
   "version": "0.0.1",
-  "description": "Extracting frames from video files with ffmpeg";
+  "description": "Extracting frames from video files with ffmpeg",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
