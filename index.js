@@ -11,7 +11,7 @@ function calculateFrame(frameRate, time, frameNumber) {
   seconds = hhmmss[2];
 
   seconds = (+hours) * 60 * 60 + (+minutes) * 60 + (+seconds); 
-  return parseFloat((seconds * frameRate)) + frameNumber;
+  return (seconds * frameRate) + frameNumber;
 }
 
 exports.extractFrame = function(filePath, frameRate, time, frameNumber) {
