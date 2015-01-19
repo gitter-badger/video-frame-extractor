@@ -1,7 +1,7 @@
 var exec = require('child_process').exec;
 
-exports.extractFrame = function(file, time, frame) {
-  var command  = 'ffmpeg -i ./fixtures/timecode.mp4 -vf "select=gte(n\\, ' + frame +')" -vframes 1 ' + frame + '.png';
+exports.extractFrame = function(filePath, frameRate, time, frameNumber) {
+  var command  = 'ffmpeg -i ./fixtures/timecode.mp4 -vf "select=gte(n\\, ' + frameNumber +')" -vframes 1 ' + frameNumber + '.png';
   console.log(command);
 
   child = exec(command, function (error, stdout, stderr) {
