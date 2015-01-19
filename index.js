@@ -1,6 +1,5 @@
 var exec = require('child_process').exec;
 
-
 function calculateFrame(frameRate, time, frameNumber) {
   var hours, minutes, seconds, hhmmss, frames;
   
