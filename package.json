@@ -1,7 +1,7 @@
 {
   "name": "video-frame-extractor",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Extracting frames from video files with ffmpeg";
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,7 @@
     "url": "http://www.github.com/ikhasi/video-frame-extractor"
   },
   "author": "Jeanre Swanepoel",
-  "license": "ISC",
+  "license": "BSD",
   "devDependencies": {
     "mocha": "^2.1.0"
   }
