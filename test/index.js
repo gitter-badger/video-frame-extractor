@@ -1,5 +1,5 @@
 var videoFrameExtractor = require('../index');
 
-for(var i = 1; i < 10; i++) {
-  videoFrameExtractor.extractFrame('./test/fixtures/timecode.mp4' , 29.97, '00:05:00', i);
+for(var i = 0; i < 20; i++) {
+  videoFrameExtractor.extractFrame('./test/fixtures/timecode.mov' , 29.970, '00:00:41', i);
 }
