@@ -40,27 +40,31 @@ function calculateFrame(frameRate, startTime, time, frameNumber) {
 }
 
 module.exports =  {
-  extractFrame: function(filePath, time, frameNumber) {
-    var frame, command, videoTrack, timecodeTrack, startTimecode, fileName;
+  extractFrame: function(filePath, time, frameNumber, outputPath) {
+    return new Promise(function(resolve, reject) {
+      var frame, command, videoTrack, timecodeTrack, startTimecode, fileName;
 
-    fileName = './test/tmp/'+ time.replace(/:/g,'.') + '.' + frameNumber;
+      startTimecode = '00:00:00';
 
-    startTimecode = '00:00:00';
+      getMediaInfo(filePath).then(function(info) {
+        videoTrack =  _.select(info[0].tracks, function(track) { return track.type === "Video"; })[0];
+        timecodeTrack = _.select(info[0].tracks, function(track) { return track.type === "OtherTime code" })[0];
 
-    getMediaInfo(filePath).then(function(info) {
-      videoTrack =  _.select(info[0].tracks, function(track) { return track.type === "Video"; })[0];
-      timecodeTrack = _.select(info[0].tracks, function(track) { return track.type === "OtherTime code" })[0];
-      
-      if(timecodeTrack !== null && timecodeTrack !== undefined)
-        startTimecode = timecodeTrack.time_code_of_first_frame;
+        if(timecodeTrack !== null && timecodeTrack !== undefined)
+          startTimecode = timecodeTrack.time_code_of_first_frame;
 
-      frame = calculateFrame(videoTrack.frame_rate.split(' ')[0], startTimecode, time, frameNumber);
+        console.log(startTimecode);
 
-      command  = 'ffmpeg -i ' + filePath +' -vf "select=gte(n\\, ' + frame + ')" -vframes 1 ' + fileName + '.png -y';
-      child = exec(command, function (error, stdout, stderr) {
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
+        frame = calculateFrame(videoTrack.frame_rate.split(' ')[0], startTimecode, time, parseInt(frameNumber));
+
+        command  = 'ffmpeg -i ' + filePath +' -vf "select=gte(n\\, ' + frame + ')" -vframes 1 /tmp/' + outputPath + ' -y';
+        child = exec(command, function (error, stdout, stderr) {
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+
+          return resolve();
+        });
       });
     });
   }
