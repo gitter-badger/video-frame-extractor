@@ -1,7 +1,7 @@
 {
   "name": "video-frame-extractor",
-  "description": "Wrapper around the `ffmpeg' to extract an image from a particular time and frame",
-  "version": "0.0.2",
+  "description": "Wrapper around `ffmpeg' to extract an image from a particular time and frame",
+  "version": "0.0.3",
   "author": {
     "name": "Jeanre Swanepoel",
     "email": "jeanre.swanepoel@ikhasi.co.za",
