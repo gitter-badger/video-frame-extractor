@@ -1,29 +1,67 @@
-var exec = require('child_process').exec;
+var exec = require('child_process').exec,
+    Promise = require('bluebird'),
+    _ = require('lodash'),
+    mediainfo = require('mediainfo');
 
-function calculateFrame(frameRate, time, frameNumber) {
-  var hours, minutes, seconds, hhmmss, frames;
+function getMediaInfo(filePath) {
+  return new Promise(function(resolve, reject) {
+    mediainfo(filePath, function(err, info) {
+      if(err) return reject(err);
+
+      return resolve(info);
+    });
+  });
+}
+
+function parseTimecode(time) {
+  var hhmmss = time.split(':');
   
-  hhmmss = time.split(':');
- 
-  hours = hhmmss[0];
-  minutes = hhmmss[1];
-  seconds = hhmmss[2];
+  return {
+    hours: hhmmss[0],
+    minutes: hhmmss[1],
+    seconds: hhmmss[2]
+  };
+}
 
-  seconds = (+hours) * 60 * 60 + (+minutes) * 60 + (+seconds); 
-  return (seconds * frameRate) + frameNumber;
+function calculateFrame(frameRate, startTime, time, frameNumber) {
+  var hours, minutes, seconds, startSeconds, parsedTime, parsedStartTime, frame, realSeconds;
+
+  parsedTime = parseTimecode(time);
+  parsedStartTime = parseTimecode(startTime);
+ 
+  seconds = (+parsedTime.hours) * 60 * 60 + (+parsedTime.minutes) * 60 + (+parsedTime.seconds); 
+  startSeconds = (+parsedStartTime.hours) * 60 * 60 + (+parsedStartTime.minutes) * 60 + (+parsedStartTime.seconds); 
+  
+  realSeconds = seconds - startSeconds;
+
+  frame = (realSeconds * Math.ceil(frameRate)) + frameNumber
+
+  return frame;
 }
 
 module.exports =  {
-  extractFrame: function(filePath, frameRate, time, frameNumber) {
-    var frame, command;
+  extractFrame: function(filePath, time, frameNumber) {
+    var frame, command, videoTrack, timecodeTrack, startTimecode, fileName;
 
-    frame = calculateFrame(frameRate, time, frameNumber);
+    fileName = './test/tmp/'+ time.replace(/:/g,'.') + '.' + frameNumber;
 
-    command  = 'ffmpeg -r 1 -i ' + filePath +' -vf "select=gte(n\\, ' + frame + ')" -vframes 1 ' + frameNumber + '.png -y';
-    child = exec(command, function (error, stdout, stderr) {
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
+    startTimecode = '00:00:00';
+
+    getMediaInfo(filePath).then(function(info) {
+      videoTrack =  _.select(info[0].tracks, function(track) { return track.type === "Video"; })[0];
+      timecodeTrack = _.select(info[0].tracks, function(track) { return track.type === "OtherTime code" })[0];
+      
+      if(timecodeTrack !== null && timecodeTrack !== undefined)
+        startTimecode = timecodeTrack.time_code_of_first_frame;
+
+      frame = calculateFrame(videoTrack.frame_rate.split(' ')[0], startTimecode, time, frameNumber);
+
+      command  = 'ffmpeg -i ' + filePath +' -vf "select=gte(n\\, ' + frame + ')" -vframes 1 ' + fileName + '.png -y';
+      child = exec(command, function (error, stdout, stderr) {
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+      });
     });
   }
 };

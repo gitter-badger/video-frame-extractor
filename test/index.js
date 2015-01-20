@@ -1,3 +1,7 @@
-var videoFrameExtractor = require('../index');
+var videoFrameExtractor = require('../index'),
+    findRemoveSync = require('find-remove');
 
-videoFrameExtractor.extractFrame('./test/fixtures/timecode.mov' , 29.970, '00:00:13', 9);
+
+var result = findRemoveSync('./test/tmp', {extensions: ['.png']});
+
+videoFrameExtractor.extractFrame('./test/fixtures/timecode.mov', '00:58:30', i);

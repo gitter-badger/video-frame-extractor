@@ -3,7 +3,7 @@
 ]# Logs
 logs
 *.log
-
+test/tmp
 # Runtime data
 pids
 *.pid
