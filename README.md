@@ -25,4 +25,4 @@ videoFrameExtractor.extractFrame(filePath, time, frameNumber);
 
 ```
 node test/index.js
-``
+```
