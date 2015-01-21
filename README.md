@@ -9,6 +9,8 @@ This library extracts frames from a video file using ffmpeg and saves the file t
 
 ### Usage
 
+The output path is the path and the filename where the image should be stored on disk
+
 ```
 npm install --save video-frame-extractor
 
