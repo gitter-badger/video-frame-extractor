@@ -14,7 +14,7 @@ npm install --save video-frame-extractor
 
 var videoFrameExtractor = require('video-frame-extractor');
 
-videoFrameExtractor.extractFrame(filePath, time, frameNumber);
+videoFrameExtractor.extractFrame(sourceFilePath, time, frameNumber, outputPath);
 ```
 
 ### Test
