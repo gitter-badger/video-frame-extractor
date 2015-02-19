@@ -41,6 +41,8 @@ function calculateFrame(frameRate, startTime, time, frameNumber) {
 
 module.exports =  {
   extractFrame: function(filePath, time, frameNumber, outputPath) {
+    console.log(time);
+    console.log(frameNumber);
     return new Promise(function(resolve, reject) {
       var frame, command, videoTrack, timecodeTrack, startTimecode, fileName;
 
@@ -55,8 +57,7 @@ module.exports =  {
 
         frame = calculateFrame(videoTrack.frame_rate.split(' ')[0], startTimecode, time, parseInt(frameNumber));
 
-        command  = 'ffmpeg -i ' + filePath +' -vf "select=gte(n\\, ' + frame + ')" -vframes 1 ' + outputPath + ' -y';
-        
+        command  = 'time ffmpeg -i ' + filePath +' -s 192x168 -qscale 28 -vf "select=gte(n\\, ' + frame + ')" -vframes 1 -threads 10 /tmp/' + outputPath + ' -y';
         child = exec(command, function (error, stdout, stderr) {
           if (error !== null) {
             console.log('exec error: ' + error);
